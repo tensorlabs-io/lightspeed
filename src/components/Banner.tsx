@@ -1,5 +1,4 @@
 import React from 'react'
-import Image from 'next/image'
 
 export default function Banner(){
     return <div className="section hero-blue wf-section">
@@ -14,7 +13,7 @@ export default function Banner(){
             <a href="#" className="button white w-button">Get started now</a>
           </div>
           <div id="w-node-fdba7448-e060-f785-c6a5-96d8248d753d-87f1cc13" className="hero-illustration-box">
-            <Image src="/images/banner.png" width="452" height="452" alt=""/>
+            <img src="images/banner.png" width="452" height="452" alt=""/>
           </div>
       </div>
     </div>

@@ -1,5 +1,4 @@
 import React from 'react'
-import Image from 'next/image'
 
 export default function Nav(){
 
@@ -8,7 +7,7 @@ export default function Nav(){
     <div className="nav-container w-container">
         <div className="logo-div">
           <a href="/" aria-current="page" className="nav-logo w-inline-block w--current">
-            <Image src="/images/logo.png" width="150" height="150" alt="Logo" className="logo"/>
+            <img src="images/logo.png" width="150" height="150" alt="Logo" className="logo"/>
           </a>
         </div>
         <nav role="navigation" className="nav-content w-nav-menu">
