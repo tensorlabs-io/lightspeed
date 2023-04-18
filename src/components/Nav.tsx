@@ -11,7 +11,7 @@ export default function Nav() {
         <div className="logo-div">
           <a href="/" aria-current="page" className="nav-logo w-inline-block w--current">
             <img src="images/logo.png" width="250" height="200" alt="Logo" className="logo" 
-            style={{ transform: 'translate(-100%,0)' }}/>
+            />
           </a>
         </div>
         <nav role="navigation" className="nav-content w-nav-menu">

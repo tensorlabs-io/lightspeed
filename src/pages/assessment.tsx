@@ -51,9 +51,9 @@ const Assessment = () => {
     const parseMcqOptions = (options: Record<string,string> | Array<string>):string => {
 
         if (Array.isArray(options)) {
-            return options.map((option) => `<li>${option}</li>`).join("")
+            return options.map((option, i) => `<li>${i+1}) ${option}</li>`).join("")
         } else if (typeof options === 'object' && options !== null) {
-            return Object.values(options).map((option) => `<li>${option}</li>`).join("")
+            return Object.values(options).map((option, i) => `<li>${i+1}) ${option}</li>`).join("")
         } else {
             throw Error()
         }
@@ -62,7 +62,7 @@ const Assessment = () => {
     const parseMcqs = (jsonData:Record<string , any>):string => {
         try {
             let html = '<h1><u>Choose the best answer:</u></h1><br/><br/>'
-            Object.values(jsonData).map( (entry: any,i) => {
+            jsonData.questions.map( (entry: any,i:number) => {
                 const options = parseMcqOptions(entry.options)
                 
                 html += `
@@ -82,8 +82,8 @@ const Assessment = () => {
     const parseTrueFalse = (jsonData:Record<string , any>):string => {
         try {
             let html = '<h1><u>True or False?:</u></h1><br/><br/>'
-            Object.values(jsonData).map( (entry: any,i) => {
-                const options = parseMcqOptions(entry.options)
+            jsonData.questions.map( (entry: any,i:number) => {
+                // const options = parseMcqOptions(entry.options)
                 
                 html += `
                 
@@ -93,7 +93,7 @@ const Assessment = () => {
                                 .replace('True or False', '')
                                 .replace('True/False: ', '')
                             } </h3><br/>
-                ${options}
+                <ul><li>True</li><li>False</li></ul>
                 <br/>
                 `
                 
@@ -107,7 +107,7 @@ const Assessment = () => {
     const parseFillInBlanks = (jsonData:Record<string , any>):string => {
         try {
             let html = '<h1><u>Fill in the blanks:</u></h1><br/><br/>'
-            Object.values(jsonData).map( (entry: any,i) => {
+            jsonData.questions.map( (entry: any,i:number) => {
                 
                 html += `
                 
@@ -125,11 +125,11 @@ const Assessment = () => {
     const parseComprehensive = (jsonData:Record<string, any>):string => {
         try {
             let html = '<h1><u>Comprehensive Question Answers:</u></h1><br/><br/>'
-            Object.values(jsonData).map( (question: any,i) => {
+            jsonData.questions.map( (entry: any, i:number) => {
                 
                 html += `
                 
-                <h3>Q${i+1}) ${question} </h3><br/>
+                <h3>Q${i+1}) ${entry.question} </h3><br/>
                 <br/><br/>
                 `
                 
