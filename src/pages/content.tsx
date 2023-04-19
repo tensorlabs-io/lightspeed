@@ -7,12 +7,15 @@ import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css'
 import { RestApi } from '@/components/RestApi'
 import { ContentGenerationValidator } from '@/components/FormValidator'
+import { useRouter } from 'next/router'
 
 const QuillEditor = dynamic(() => import('react-quill'), {
     ssr: false
 });
 
 const Content = () => {
+
+    const router = useRouter()
 
     const [formDisplay, setFormDisplay] = useState<boolean>(true)
     const [contentType, setContentType] = useState<string>('text')
@@ -24,6 +27,7 @@ const Content = () => {
     const [generating, setGenerating] = useState<boolean>(false)
 
     const [generatedContent, setGeneratedContent] = useState<string>('')
+    const [pgc, setPgc] = useState<string>('')
     const handleGenerate = async () => {
         setStep(2)
         setGenerating(true)
@@ -47,6 +51,7 @@ const Content = () => {
             if (resp && resp?.success) {
                 if (resp.success == 'true' && resp?.data?.generated_notes) {
                     setGeneratedContent(resp.data.generated_notes)
+                    setPgc(resp.data.generated_notes)
                     setGenerating(false)
                     setStep(3)
                     setFormDisplay(false)
@@ -79,6 +84,13 @@ const Content = () => {
 
     const handleExport = () => {
         console.log('exportiung')
+    }
+
+    const createAssessment = () => {
+        router.push({
+            pathname: '/assessment',
+            query: { pgc: pgc },
+        });
     }
     return (
         <>
@@ -228,6 +240,12 @@ const Content = () => {
                         gap: '3rem',
                         marginTop: '4rem',
                     }}>
+                        <button
+                            className='contentBtn'
+                            onClick={createAssessment}>
+                            Create Assessment
+                        </button>
+
                         <button
                             className='contentBtn'>
                             Save & Review

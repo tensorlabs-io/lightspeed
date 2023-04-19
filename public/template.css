@@ -7333,10 +7333,10 @@ blockquote {
 .userWrapper {
   display: flex;
 }
-
 .userWrapper .contentBox {
   flex-grow: 5;
   padding: 100px;
+  position: relative;
 }
 
 .userSidebar {
@@ -7495,5 +7495,43 @@ blockquote {
 
   .contentBox .contentHeading {
     text-align: center;
+  }
+
+}
+
+
+
+.loader {
+  display:flex;
+  flex-direction:column;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
+.loader-wheel {
+  animation: spin 1s infinite linear;
+  border: 2px solid rgba(30, 30, 30, 0.5);
+  border-left: 4px solid #fff;
+  border-radius: 50%;
+  height: 50px;
+  margin-bottom: 10px;
+  width: 50px;
+}
+
+.loader-text {
+  color: #fff;
+  font-family: arial, sans-serif;
+  text-align: center;
+}
+
+
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }

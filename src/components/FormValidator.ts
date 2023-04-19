@@ -91,8 +91,25 @@ const AssessmentGenerationValidator = (
     content: string,
     contentType: string,
     numQuestions: number,
-    questionType: string,
+    createQuestions: Array<number | null>,
 ): (string | null) => {
+
+    let total:number = 0;
+    createQuestions.map((val) => {
+        if(val != null){
+            if(val < 0){
+                return 'You cannot enter negative quantity'
+            }
+            if(val > 20) {
+                return 'Cannot generate more than 20 questions of a type'
+            }
+            total+=val
+        }
+    })
+
+    if(total <= 0) {
+        return 'You must select atleast one type of question'
+    }
 
     if(!content || !content.length){
         return 'You have to add some material first'
@@ -106,9 +123,6 @@ const AssessmentGenerationValidator = (
         return 'No of questions should be in range 1-20'
     }
 
-    if(!questionType || !['mcqs','true_false','comprehensive','fillinblanks'].includes(questionType) ) {
-        return 'You must select a question type'
-    }
 
     return null
 }

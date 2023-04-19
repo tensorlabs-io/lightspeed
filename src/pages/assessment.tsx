@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css'
 import { RestApi } from '@/components/RestApi'
 import { AssessmentGenerationValidator } from '@/components/FormValidator'
+import { useRouter } from 'next/router'
 
 const QuillEditor = dynamic(() => import('react-quill'), {
     ssr: false
@@ -14,40 +15,28 @@ const QuillEditor = dynamic(() => import('react-quill'), {
 
 const Assessment = () => {
 
+    const router = useRouter();
+    const { pgc } = router.query
+   
+    const [createMcq, setCreateMcq] = useState<number | null>(null)
+    const [createTrueFalse, setCreateTrueFalse] = useState<number | null>(null)
+    const [createFillInBlanks,setCreateFillInBlanks] = useState<number | null>(null)
+    const [createComprehensive, setCreateComprehensive] = useState<number | null>(null)
 
-    const [questionType, setQuestionType] = useState<string>('mcq')
 
     const [formDisplay, setFormDisplay] = useState<boolean>(true)
     const [contentType, setContentType] = useState<string>('text')
     const [numQuestions, setNumQuestions] = useState<number>(20)
 
-    const [content, setContent] = useState<string>('')
+    const [content, setContent] = useState<any>(pgc)
     const [error, setError] = useState<string | null>(null)
-    const [generating, setGenerating] = useState<boolean>(false)
+
+    const [generateStatus, setGenerateStatus] = useState<string|null>(null)
+    const [responseStatus, setResponseStatus] = useState<string|null>(null)
 
     const [generatedContent, setGeneratedContent] = useState<string>('')
-    const handleGenerate = () => {
-        setGenerating(true)
-        setError(null)
 
-        const checkForErrors = AssessmentGenerationValidator(
-            content,
-            contentType,
-            numQuestions,
-            questionType
-        )
-        if (!checkForErrors) {
-
-            generateQuestions('/questionnaire/'+questionType, numQuestions, 3)
-
-        } else {
-            setError(checkForErrors)
-            setGenerating(false)
-        }
-
-        
-    }
-
+    
     const parseMcqOptions = (options: Record<string,string> | Array<string>):string => {
 
         if (Array.isArray(options)) {
@@ -160,7 +149,7 @@ const Assessment = () => {
 
     }
 
-    const generateQuestions = async (endpoint: string, numofquestions: number, numOfOptions: number | null = null) => {
+    const generateQuestions = async (endpoint: string, numofquestions: number, numOfOptions: number | null = null):Promise<string> => {
         
         type Data = {
             user_text: string;
@@ -180,15 +169,12 @@ const Assessment = () => {
         }
 
         const resp = await RestApi(endpoint, data)
+        console.log('api response', resp)
         if (resp && resp?.success) {
             if (resp.success == 'true' && resp?.data?.questions) {
-                console.log(resp)
-                const html = parseData(resp.data.questions, endpoint)
-                if(html != ''){
-                    setGeneratedContent(html)
-                }else{
-                    setError('Unexpected error occured while parsing output from GPT')
-                }
+                
+                return parseData(resp.data.questions, endpoint)
+                
             } else {
                 setError(resp?.message || 'Unexpected error occured. Please try again')
             }
@@ -196,8 +182,78 @@ const Assessment = () => {
             setError('Unexpected error occured. Please try again')
         }
 
+        return ''
         
-        setGenerating(false)
+        
+    }
+
+    const handleGenerate = async () => {
+        setGenerateStatus('Validating Inputs..')
+        setError(null)
+        const createQuestionsArray = [createMcq, createTrueFalse, createFillInBlanks, createComprehensive]
+        const checkForErrors = AssessmentGenerationValidator(
+            content,
+            contentType,
+            numQuestions,
+            createQuestionsArray
+        )
+        if (!checkForErrors) {
+
+            let html = '';
+
+            if(createMcq != null){
+                setGenerateStatus('Generating MCQs...')
+                const generatedMcqs = await generateQuestions('/questionnaire/mcqs', createMcq, 3)
+                if(generatedMcqs == ''){
+                    setResponseStatus(responseStatus + `<p className='error'>MCQ generation failed</p>`)
+                }else{
+                    setResponseStatus(responseStatus + `<p className='error'>MCQ generated succesfully</p>`)
+                    html += '<br/>'+generatedMcqs
+                }
+            }
+
+            if(createComprehensive != null){
+                setGenerateStatus('Generating Comprehensive Questions...')
+                const generatedComprehensive = await generateQuestions('/questionnaire/comprehensive',createComprehensive, 3)
+                if(generatedComprehensive == ''){
+                    setResponseStatus(responseStatus + `<p className='error'>Comprehensive question generation failed</p>`)
+                }else{
+                    setResponseStatus(responseStatus + `<p className='success'>Comprehensive questions generated successfully</p>`)
+                    html += '<br/>'+generatedComprehensive
+                }
+            }
+
+            if(createFillInBlanks != null){
+                setGenerateStatus('Generating Fill in the blanks...')
+                const generatedFillInBlanks = await generateQuestions('/questionnaire/fillinblanks', createFillInBlanks, 3)
+                if(generatedFillInBlanks == ''){
+                    setResponseStatus(responseStatus + `<p className='error'>Fill in the blanks generation failed</p>`)
+                }else{
+                    setResponseStatus(responseStatus + `<p className='success'>Fill in the blanks generated successfully</p>`)
+                    html += '<br/>'+generatedFillInBlanks
+                }
+            }
+
+            if(createTrueFalse != null) {
+                setGenerateStatus('Generating True False...')
+                const generatedTrueFalse = await generateQuestions('/questionnaire/true_false', createTrueFalse, 3)
+                if(generatedTrueFalse == ''){
+                    setResponseStatus(responseStatus + `<p className='error'>True & False generation failed</p>`)
+                }else {
+                    setResponseStatus(responseStatus + `<p className='success'>True & False generated successfully</p>`)
+                    html += '<br/>'+generatedTrueFalse
+                }
+            }
+
+            if(html != '') {
+                setGeneratedContent(html)
+            }
+            setGenerateStatus(null)
+        } else {
+            setError(checkForErrors)
+            setGenerateStatus(null)
+        }
+
         
     }
 
@@ -274,6 +330,7 @@ const Assessment = () => {
                                             padding: '15px',
                                             resize: 'none',
                                         }}
+                                        value={content}
                                         placeholder={contentType === 'text' ? 'Enter text material' : 'Enter comma seperated keywords'}
                                         onChange={(e) => setContent(e.target.value)}
                                     >
@@ -310,60 +367,57 @@ const Assessment = () => {
                             <div className="grid-item column" style={{ gap: '5px' }}>
                                 <div style={{ display: 'flex', gap: '3rem' }}>
                                     <input 
-                                        type="radio" 
-                                        name="question_type"
+                                        type="checkbox" 
+                                        checked={createMcq!=null}
                                         value='mcqs' 
-                                        checked={questionType === 'mcqs'} 
-                                        onChange={() => setQuestionType('mcqs')} 
+                                        onChange={() => setCreateMcq( (createMcq!=null)?null:5 )} 
                                     />
                                     <label style={{ width: '250px', textAlign: 'left' }}> Multiple Choice Questions</label>
-                                    {/* <input type="number" min="1" max="20" className="smallNumberInput" value={amountMcq} onChange={(e) => setAmountMcq(Number(e.target.value))} /> */}
+                                    <input type="number" min="1" max="20" className="smallNumberInput" value={createMcq || 0} onChange={(e) => setCreateMcq(Number(e.target.value))} />
                                 </div>
 
                                 <div style={{ display: 'flex', gap: '3rem' }}>
                                     <input 
-                                        type="radio" 
-                                        name="question_type"
-                                        value='true_false'
-                                        checked={questionType === 'true_false'} 
-                                        onChange={() => setQuestionType('true_false')} 
+                                        type="checkbox" 
+                                        checked={createTrueFalse!=null}
+                                        value='true_false' 
+                                        onChange={() => setCreateTrueFalse( (createTrueFalse!=null)?null:5 )} 
                                     />
                                     <label style={{ width: '250px', textAlign: 'left' }}>True or False</label>
-                                    {/* <input type="number" min="1" max="20" className="smallNumberInput" value={amountTrueFalse} onChange={(e) => setAmountTrueFalse(Number(e.target.value))} /> */}
+                                    <input type="number" min="1" max="20" className="smallNumberInput" value={createTrueFalse || 0} onChange={(e) => setCreateTrueFalse(Number(e.target.value))} />
                                 </div>
 
 
                                 <div style={{ display: 'flex', gap: '3rem' }}>
                                     <input 
-                                        type="radio"
-                                        name="question_type"
-                                        value='fillinblanks'
-                                        checked={questionType === 'fillinblanks'} 
-                                        onChange={() => setQuestionType('fillinblanks')} 
+                                        type="checkbox" 
+                                        checked={createFillInBlanks!=null}
+                                        value='fillinblank' 
+                                        onChange={() => setCreateFillInBlanks( (createFillInBlanks!=null)?null:5 )} 
                                     />
                                     <label style={{ width: '250px', textAlign: 'left' }}>Fill in the Blank</label>
-                                    {/* <input type="number" min="1" max="20" className="smallNumberInput" value={amountBlanks} onChange={(e) => setAmountBlanks(Number(e.target.value))} /> */}
+                                    <input type="number" min="1" max="20" className="smallNumberInput" value={createFillInBlanks || 0} onChange={(e) => setCreateFillInBlanks(Number(e.target.value))} />
                                 </div>
 
                                 <div style={{ display: 'flex', gap: '3rem' }}>
                                     <input 
-                                        type="radio"
-                                        name="question_type"
-                                        checked={questionType === 'comprehensive'} 
-                                        onChange={() => setQuestionType('comprehensive')} 
+                                        type="checkbox" 
+                                        checked={createComprehensive!=null}
+                                        value='comprehensive' 
+                                        onChange={() => setCreateComprehensive( (createComprehensive!=null)?null:5 )}
                                     />
                                     <label style={{ width: '250px', textAlign: 'left' }}>Comprehensive Questions</label>
-                                    {/* <input type="number" min="1" max="20" className="smallNumberInput" value={amountComprehensive} onChange={(e) => setAmountComprehensive(Number(e.target.value))} /> */}
+                                    <input type="number" min="1" max="20" className="smallNumberInput" value={createComprehensive || 0} onChange={(e) => setCreateComprehensive(Number(e.target.value))} />
                                 </div>
                             </div>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: '3rem', paddingTop: '2rem' }}>
                             <button
-                                className={`contentBtn${generating ? ' generating' : ''}`}
+                                className={`contentBtn${generateStatus!=null ? ' generating' : ''}`}
                                 onClick={handleGenerate}
-                                disabled={generating}
+                                disabled={generateStatus!=null}
                             >
-                                {generating ? 'Generating Content....' : 'Generate'}
+                                {generateStatus!=null ? 'Generating...' : 'Generate'}
                             </button>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: '4rem' }}>
@@ -399,6 +453,32 @@ const Assessment = () => {
                             Export as PDF
                         </button>
                     </div>
+
+
+                    {generateStatus!=null && <div style={{ 
+                        position: 'fixed',
+                        background: 'rgba(0,0,0,0.5)',
+                        zIndex: '10',
+                        top: '0',
+                        bottom: '0',
+                        right: '0',
+                        left: '0',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: '10%',
+                    }}>
+
+                        <div className="loader">
+                            <div className="loader-wheel"></div>
+                            <div className="loader-text">
+                                { generateStatus }</div>
+                        </div>
+ 
+                        <div dangerouslySetInnerHTML={{ __html: responseStatus || ''}} style={{ width: '300px', height: '400px'}}>
+                        </div>
+                    </div>}
                 </div>
             </div>
 
@@ -408,5 +488,6 @@ const Assessment = () => {
         </>
     )
 }
+
 
 export default withAuth(Assessment)
