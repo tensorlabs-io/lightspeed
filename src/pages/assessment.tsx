@@ -50,6 +50,9 @@ const Assessment = () => {
 
     const parseMcqs = (jsonData:Record<string , any>):string => {
         try {
+            if(!jsonData.questions.length){
+                return ''
+            }
             let html = '<h1><u>Choose the best answer:</u></h1><br/><br/>'
             jsonData.questions.map( (entry: any,i:number) => {
                 const options = parseMcqOptions(entry.options)
@@ -70,6 +73,9 @@ const Assessment = () => {
 
     const parseTrueFalse = (jsonData:Record<string , any>):string => {
         try {
+            if(!jsonData.questions.length){
+                return ''
+            }
             let html = '<h1><u>True or False?:</u></h1><br/><br/>'
             jsonData.questions.map( (entry: any,i:number) => {
                 // const options = parseMcqOptions(entry.options)
@@ -95,6 +101,9 @@ const Assessment = () => {
 
     const parseFillInBlanks = (jsonData:Record<string , any>):string => {
         try {
+            if(!jsonData.questions.length){
+                return ''
+            }
             let html = '<h1><u>Fill in the blanks:</u></h1><br/><br/>'
             jsonData.questions.map( (entry: any,i:number) => {
                 
@@ -113,6 +122,9 @@ const Assessment = () => {
     
     const parseComprehensive = (jsonData:Record<string, any>):string => {
         try {
+            if(!jsonData.questions.length){
+                return ''
+            }
             let html = '<h1><u>Comprehensive Question Answers:</u></h1><br/><br/>'
             jsonData.questions.map( (entry: any, i:number) => {
                 
@@ -187,8 +199,78 @@ const Assessment = () => {
         
     }
 
+    // const handleGenerate = async () => {
+    //     setGenerateStatus('Validating Inputs..')
+    //     setError(null)
+    //     const createQuestionsArray = [createMcq, createTrueFalse, createFillInBlanks, createComprehensive]
+    //     const checkForErrors = AssessmentGenerationValidator(
+    //         content,
+    //         contentType,
+    //         numQuestions,
+    //         createQuestionsArray
+    //     )
+    //     if (!checkForErrors) {
+
+    //         let html = '';
+
+    //         if(createMcq != null){
+    //             setGenerateStatus('Generating MCQs...')
+    //             const generatedMcqs = await generateQuestions('/questionnaire/mcqs', createMcq, 3)
+    //             if(generatedMcqs == ''){
+    //                 setResponseStatus(responseStatus + `<p className='error'>MCQ generation failed</p>`)
+    //             }else{
+    //                 setResponseStatus(responseStatus + `<p className='error'>MCQ generated succesfully</p>`)
+    //                 html += '<br/>'+generatedMcqs
+    //             }
+    //         }
+
+    //         if(createComprehensive != null){
+    //             setGenerateStatus('Generating Comprehensive Questions...')
+    //             const generatedComprehensive = await generateQuestions('/questionnaire/comprehensive',createComprehensive, 3)
+    //             if(generatedComprehensive == ''){
+    //                 setResponseStatus(responseStatus + `<p className='error'>Comprehensive question generation failed</p>`)
+    //             }else{
+    //                 setResponseStatus(responseStatus + `<p className='success'>Comprehensive questions generated successfully</p>`)
+    //                 html += '<br/>'+generatedComprehensive
+    //             }
+    //         }
+
+    //         if(createFillInBlanks != null){
+    //             setGenerateStatus('Generating Fill in the blanks...')
+    //             const generatedFillInBlanks = await generateQuestions('/questionnaire/fillinblanks', createFillInBlanks, 3)
+    //             if(generatedFillInBlanks == ''){
+    //                 setResponseStatus(responseStatus + `<p className='error'>Fill in the blanks generation failed</p>`)
+    //             }else{
+    //                 setResponseStatus(responseStatus + `<p className='success'>Fill in the blanks generated successfully</p>`)
+    //                 html += '<br/>'+generatedFillInBlanks
+    //             }
+    //         }
+
+    //         if(createTrueFalse != null) {
+    //             setGenerateStatus('Generating True False...')
+    //             const generatedTrueFalse = await generateQuestions('/questionnaire/true_false', createTrueFalse, 3)
+    //             if(generatedTrueFalse == ''){
+    //                 setResponseStatus(responseStatus + `<p className='error'>True & False generation failed</p>`)
+    //             }else {
+    //                 setResponseStatus(responseStatus + `<p className='success'>True & False generated successfully</p>`)
+    //                 html += '<br/>'+generatedTrueFalse
+    //             }
+    //         }
+
+    //         if(html != '') {
+    //             setGeneratedContent(html)
+    //         }
+    //         setGenerateStatus(null)
+    //     } else {
+    //         setError(checkForErrors)
+    //         setGenerateStatus(null)
+    //     }
+
+        
+    // }
+
     const handleGenerate = async () => {
-        setGenerateStatus('Validating Inputs..')
+        setGenerateStatus('Generating Assessment..')
         setError(null)
         const createQuestionsArray = [createMcq, createTrueFalse, createFillInBlanks, createComprehensive]
         const checkForErrors = AssessmentGenerationValidator(
@@ -199,54 +281,54 @@ const Assessment = () => {
         )
         if (!checkForErrors) {
 
-            let html = '';
-
-            if(createMcq != null){
-                setGenerateStatus('Generating MCQs...')
-                const generatedMcqs = await generateQuestions('/questionnaire/mcqs', createMcq, 3)
-                if(generatedMcqs == ''){
-                    setResponseStatus(responseStatus + `<p className='error'>MCQ generation failed</p>`)
-                }else{
-                    setResponseStatus(responseStatus + `<p className='error'>MCQ generated succesfully</p>`)
-                    html += '<br/>'+generatedMcqs
-                }
+            type Data = {
+                user_text: string;
+                model: string;
+                true_false: number;
+                fill_in_the_blanks: number;
+                comprehensive_questions: number;
+                multiple_choice_questions: number;
+            }
+    
+            const data: Data = {
+                user_text: content,
+                model: 'gpt3.5turbo',
+                true_false: createTrueFalse || 0,
+                fill_in_the_blanks: createFillInBlanks || 0,
+                comprehensive_questions: createComprehensive || 0,
+                multiple_choice_questions: createMcq || 0,
             }
 
-            if(createComprehensive != null){
-                setGenerateStatus('Generating Comprehensive Questions...')
-                const generatedComprehensive = await generateQuestions('/questionnaire/comprehensive',createComprehensive, 3)
-                if(generatedComprehensive == ''){
-                    setResponseStatus(responseStatus + `<p className='error'>Comprehensive question generation failed</p>`)
-                }else{
-                    setResponseStatus(responseStatus + `<p className='success'>Comprehensive questions generated successfully</p>`)
-                    html += '<br/>'+generatedComprehensive
-                }
-            }
+    
+            const resp = await RestApi('/alltypes', data)
+            console.log('api response', resp)
+            if (resp && resp?.success) {
+                if (resp.success == 'true') {
+                    let html = ''
+                    const data = resp.data
+                    if(createMcq) {
+                        html += parseMcqs(data?.multiple_choice_questions?.[0])
+                    }
 
-            if(createFillInBlanks != null){
-                setGenerateStatus('Generating Fill in the blanks...')
-                const generatedFillInBlanks = await generateQuestions('/questionnaire/fillinblanks', createFillInBlanks, 3)
-                if(generatedFillInBlanks == ''){
-                    setResponseStatus(responseStatus + `<p className='error'>Fill in the blanks generation failed</p>`)
-                }else{
-                    setResponseStatus(responseStatus + `<p className='success'>Fill in the blanks generated successfully</p>`)
-                    html += '<br/>'+generatedFillInBlanks
-                }
-            }
+                    if(createComprehensive) {
+                        html += parseComprehensive(data?.comprehensive_questions?.[0])
+                    }
 
-            if(createTrueFalse != null) {
-                setGenerateStatus('Generating True False...')
-                const generatedTrueFalse = await generateQuestions('/questionnaire/true_false', createTrueFalse, 3)
-                if(generatedTrueFalse == ''){
-                    setResponseStatus(responseStatus + `<p className='error'>True & False generation failed</p>`)
-                }else {
-                    setResponseStatus(responseStatus + `<p className='success'>True & False generated successfully</p>`)
-                    html += '<br/>'+generatedTrueFalse
-                }
-            }
+                    if(createFillInBlanks) {
+                        html += parseFillInBlanks(data?.fill_in_the_blanks)
+                    }
 
-            if(html != '') {
-                setGeneratedContent(html)
+                    if(createTrueFalse) {
+                        html += parseTrueFalse(data?.true_false?.[0])
+                    }
+
+                    setGeneratedContent(html)
+                    
+                } else {
+                    setError(resp?.message || 'Unexpected error occured. Please try again')
+                }
+            } else {
+                setError('Unexpected error occured. Please try again')
             }
             setGenerateStatus(null)
         } else {
@@ -476,8 +558,6 @@ const Assessment = () => {
                                 { generateStatus }</div>
                         </div>
  
-                        <div dangerouslySetInnerHTML={{ __html: responseStatus || ''}} style={{ width: '300px', height: '400px'}}>
-                        </div>
                     </div>}
                 </div>
             </div>
