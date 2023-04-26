@@ -55,7 +55,7 @@ export default function Illustration() {
                 <p className="paragraph">Easily generate unique content and assessments tailored to your students' needs with LightSpeed's AI-powered document creation systems.</p>
               </div>
             </div>
-            <img src="/images/man-with-checklist.png" width="431" data-ix="fade-in-on-scroll" style={{ transform: 'translate(15%,0)' }} />
+            <img src="/images/man-with-checklist.png" width="431" data-ix="fade-in-on-scroll" />
           </div>
         </div>
       </div>

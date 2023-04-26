@@ -14,7 +14,7 @@ export default function SideBar(props: SideBarProps) {
   }, [])
   
   return (
-    <div className="userSidebar" style={{ minHeight: '92.85vh' }}>
+    <div className="userSidebar">
       <div style={{ width: '145px', height: '150px', borderRadius: '50%', backgroundColor: '#D9D9D9' }}></div>
       <h3 style={{ textAlign: 'center' }}>
         {name} <br />

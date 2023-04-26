@@ -77,7 +77,7 @@ export default function Login() {
                                 onClick={loginHandler}>Login</button>
                             </div>
                         </div>
-                        <div className="img-banner" style={{
+                        <div className="img-banner hide-on-mobile" style={{
 
                             display: 'flex',
                             justifyContent: 'center',

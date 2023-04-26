@@ -13,7 +13,7 @@ const Home = () =>  {
                 <div className="contentBox">
                     <div style={{ display: 'flex', gap: '2rem', alignItems: 'center'}}>
                         <h3 className="contentHeading"> Choose a type of creation </h3>
-                        <NoteAddIcon style={{fontSize: '3rem', paddingBottom: '10px'}} />
+                        <NoteAddIcon className='hide-on-mobile' style={{fontSize: '3rem', paddingBottom: '10px'}} />
                     </div>
                     <div style={{
                         width: '80%',

@@ -32,7 +32,7 @@ const Assessment = () => {
     const [error, setError] = useState<string | null>(null)
 
     const [generateStatus, setGenerateStatus] = useState<string|null>(null)
-    const [responseStatus, setResponseStatus] = useState<string|null>(null)
+    const [exporting, setExporting] = useState<string | null>(null)
 
     const [generatedContent, setGeneratedContent] = useState<string>('')
 
@@ -141,134 +141,6 @@ const Assessment = () => {
         }
     }
 
-    const parseData = (data: string, endpoint: string):string => {
-        try{
-            const jsonData = JSON.parse(data)
-            if(endpoint == '/questionnaire/mcqs') {
-                return parseMcqs(jsonData)
-            }else if(endpoint == '/questionnaire/comprehensive'){
-                return parseComprehensive(jsonData)
-            }else if(endpoint == '/questionnaire/true_false'){
-                return parseTrueFalse(jsonData)
-            }else if(endpoint == '/questionnaire/fillinblanks'){
-                return parseFillInBlanks(jsonData)
-            }
-
-            return ''
-        } catch (e) {
-            return ''
-        }
-
-    }
-
-    const generateQuestions = async (endpoint: string, numofquestions: number, numOfOptions: number | null = null):Promise<string> => {
-        
-        type Data = {
-            user_text: string;
-            model: string;
-            numofquestions: number;
-            numofoptions?: number;
-        }
-
-        const data: Data = {
-            user_text: content,
-            model: 'gpt3.5turbo',
-            numofquestions,
-        }
-
-        if (numOfOptions) {
-            data['numofoptions'] = numOfOptions
-        }
-
-        const resp = await RestApi(endpoint, data)
-        console.log('api response', resp)
-        if (resp && resp?.success) {
-            if (resp.success == 'true' && resp?.data?.questions) {
-                
-                return parseData(resp.data.questions, endpoint)
-                
-            } else {
-                setError(resp?.message || 'Unexpected error occured. Please try again')
-            }
-        } else {
-            setError('Unexpected error occured. Please try again')
-        }
-
-        return ''
-        
-        
-    }
-
-    // const handleGenerate = async () => {
-    //     setGenerateStatus('Validating Inputs..')
-    //     setError(null)
-    //     const createQuestionsArray = [createMcq, createTrueFalse, createFillInBlanks, createComprehensive]
-    //     const checkForErrors = AssessmentGenerationValidator(
-    //         content,
-    //         contentType,
-    //         numQuestions,
-    //         createQuestionsArray
-    //     )
-    //     if (!checkForErrors) {
-
-    //         let html = '';
-
-    //         if(createMcq != null){
-    //             setGenerateStatus('Generating MCQs...')
-    //             const generatedMcqs = await generateQuestions('/questionnaire/mcqs', createMcq, 3)
-    //             if(generatedMcqs == ''){
-    //                 setResponseStatus(responseStatus + `<p className='error'>MCQ generation failed</p>`)
-    //             }else{
-    //                 setResponseStatus(responseStatus + `<p className='error'>MCQ generated succesfully</p>`)
-    //                 html += '<br/>'+generatedMcqs
-    //             }
-    //         }
-
-    //         if(createComprehensive != null){
-    //             setGenerateStatus('Generating Comprehensive Questions...')
-    //             const generatedComprehensive = await generateQuestions('/questionnaire/comprehensive',createComprehensive, 3)
-    //             if(generatedComprehensive == ''){
-    //                 setResponseStatus(responseStatus + `<p className='error'>Comprehensive question generation failed</p>`)
-    //             }else{
-    //                 setResponseStatus(responseStatus + `<p className='success'>Comprehensive questions generated successfully</p>`)
-    //                 html += '<br/>'+generatedComprehensive
-    //             }
-    //         }
-
-    //         if(createFillInBlanks != null){
-    //             setGenerateStatus('Generating Fill in the blanks...')
-    //             const generatedFillInBlanks = await generateQuestions('/questionnaire/fillinblanks', createFillInBlanks, 3)
-    //             if(generatedFillInBlanks == ''){
-    //                 setResponseStatus(responseStatus + `<p className='error'>Fill in the blanks generation failed</p>`)
-    //             }else{
-    //                 setResponseStatus(responseStatus + `<p className='success'>Fill in the blanks generated successfully</p>`)
-    //                 html += '<br/>'+generatedFillInBlanks
-    //             }
-    //         }
-
-    //         if(createTrueFalse != null) {
-    //             setGenerateStatus('Generating True False...')
-    //             const generatedTrueFalse = await generateQuestions('/questionnaire/true_false', createTrueFalse, 3)
-    //             if(generatedTrueFalse == ''){
-    //                 setResponseStatus(responseStatus + `<p className='error'>True & False generation failed</p>`)
-    //             }else {
-    //                 setResponseStatus(responseStatus + `<p className='success'>True & False generated successfully</p>`)
-    //                 html += '<br/>'+generatedTrueFalse
-    //             }
-    //         }
-
-    //         if(html != '') {
-    //             setGeneratedContent(html)
-    //         }
-    //         setGenerateStatus(null)
-    //     } else {
-    //         setError(checkForErrors)
-    //         setGenerateStatus(null)
-    //     }
-
-        
-    // }
-
     const handleGenerate = async () => {
         setGenerateStatus('Generating Assessment..')
         setError(null)
@@ -343,14 +215,29 @@ const Assessment = () => {
         setGeneratedContent(value)
     }
 
-    const handleNumQuestionsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setNumQuestions(Number(e.target.value))
+
+    const handleExport = async () => {
+        setExporting('Exporting to pdf...')
+        const res = await fetch('/api/export-pdf', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ html: generatedContent }),
+        });
+    
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+    
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'export.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setExporting(null)
     }
 
-
-    const handleExport = () => {
-        console.log('exporting')
-    }
     return (
         <>
             <Nav />
@@ -373,9 +260,12 @@ const Assessment = () => {
                                     background: 'white',
                                     padding: '30px',
                                     position: 'relative',
-                                    width: '100%'
+                                    width: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '20px'
                                 }}>
-                                    <div style={{
+                                    <div className="input-type" style={{
                                         display: 'flex',
                                         gap: '20px',
                                         alignItems: 'center',
@@ -432,22 +322,14 @@ const Assessment = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="grid-item">
-                                <select disabled>
-                                    <option>2. Number of questions</option>
-                                </select>
-                            </div>
-                            <div className="grid-item row">
-                                <input type="range" min="1" max="20" className="rangeSlider" value={numQuestions} onChange={handleNumQuestionsChange} />
-                                <input type="number" min="1" max="20" value={numQuestions} className="smallNumberInput" onChange={handleNumQuestionsChange} />
-                            </div>
+                            
                             <div className="grid-item">
                                 <select disabled>
                                     <option>2. Question Types</option>
                                 </select>
                             </div>
-                            <div className="grid-item column" style={{ gap: '5px' }}>
-                                <div style={{ display: 'flex', gap: '3rem' }}>
+                            <div className="grid-item" style={{ gap: '5px', display: 'flex', flexDirection: 'column' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
                                     <input 
                                         type="checkbox" 
                                         checked={createMcq!=null}
@@ -458,7 +340,7 @@ const Assessment = () => {
                                     <input type="number" min="1" max="20" className="smallNumberInput" value={createMcq || 0} onChange={(e) => setCreateMcq(Number(e.target.value))} />
                                 </div>
 
-                                <div style={{ display: 'flex', gap: '3rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
                                     <input 
                                         type="checkbox" 
                                         checked={createTrueFalse!=null}
@@ -470,7 +352,7 @@ const Assessment = () => {
                                 </div>
 
 
-                                <div style={{ display: 'flex', gap: '3rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
                                     <input 
                                         type="checkbox" 
                                         checked={createFillInBlanks!=null}
@@ -481,7 +363,7 @@ const Assessment = () => {
                                     <input type="number" min="1" max="20" className="smallNumberInput" value={createFillInBlanks || 0} onChange={(e) => setCreateFillInBlanks(Number(e.target.value))} />
                                 </div>
 
-                                <div style={{ display: 'flex', gap: '3rem' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
                                     <input 
                                         type="checkbox" 
                                         checked={createComprehensive!=null}
@@ -508,7 +390,7 @@ const Assessment = () => {
 
                     </div>
 
-                    <div className="DC" style={{ marginTop: '30px' }}>
+                    <div className="DC" style={{ marginTop: '30px', marginBottom: '3rem' }}>
                         <QuillEditor
                             value={generatedContent}
                             onChange={handleChange}
@@ -517,27 +399,19 @@ const Assessment = () => {
 
                     </div>
 
-                    <div style={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        gap: '3rem',
-                        marginTop: '4rem',
-                    }}>
+                    <div className='contentBtns'>
+                       
                         <button
-                            className='contentBtn'>
-                            Save & Review
-                        </button>
-
-                        <button
-                            className='contentBtn'
+                            className={`contentBtn${exporting!=null ? ' generating' : ''}`}
                             onClick={handleExport}
+                            disabled={exporting!=null}
                         >
-                            Export as PDF
+                            {exporting!=null ? 'Generating...' : 'Export as PDF'}
                         </button>
                     </div>
 
 
-                    {generateStatus!=null && <div style={{ 
+                    { (generateStatus!=null || exporting!=null) && <div style={{ 
                         position: 'fixed',
                         background: 'rgba(0,0,0,0.5)',
                         zIndex: '10',
@@ -555,7 +429,7 @@ const Assessment = () => {
                         <div className="loader">
                             <div className="loader-wheel"></div>
                             <div className="loader-text">
-                                { generateStatus }</div>
+                                { generateStatus || exporting }</div>
                         </div>
  
                     </div>}

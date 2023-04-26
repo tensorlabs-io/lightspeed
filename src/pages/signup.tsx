@@ -54,7 +54,7 @@ export default function SignUp() {
                     alignItems: 'center',
                 }}>
                     <div className="mflex" style={{ gap: '5rem', padding: '5rem', flexWrap: 'wrap' }} >
-                        <div className="img-banner" style={{
+                        <div className="img-banner hide-on-mobile" style={{
 
                             display: 'flex',
                             justifyContent: 'center',
@@ -79,7 +79,7 @@ export default function SignUp() {
                         }}>
                             <h3 style={{ fontSize: '2.2rem' }}>Sign up for your free account</h3>
                             {error && <p className='error'>{error}</p>}
-                            <div>
+                            <div style={{ display:'flex', flexWrap:'wrap'}} >
                                 <input type='text' placeholder='First name' className='text-input half-input'
                                 onChange={(e) => setFirstName(e.target.value)} />
                                 &nbsp;&nbsp;&nbsp;

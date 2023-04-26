@@ -24,13 +24,15 @@ const Content = () => {
     const [content, setContent] = useState<string>('')
     const [step, setStep] = useState<number>(1)
     const [error, setError] = useState<string | null>(null)
-    const [generating, setGenerating] = useState<boolean>(false)
+
+    const [generateStatus, setGenerateStatus] = useState<string|null>(null)
+    const [exporting, setExporting] = useState<string|null>(null)
 
     const [generatedContent, setGeneratedContent] = useState<string>('')
     const [pgc, setPgc] = useState<string>('')
     const handleGenerate = async () => {
         setStep(2)
-        setGenerating(true)
+        setGenerateStatus('Generating Content..')
         setError(null)
 
         const checkForErrors = ContentGenerationValidator(
@@ -52,7 +54,7 @@ const Content = () => {
                 if (resp.success == 'true' && resp?.data?.generated_notes) {
                     setGeneratedContent(resp.data.generated_notes)
                     setPgc(resp.data.generated_notes)
-                    setGenerating(false)
+                    setGenerateStatus(null)
                     setStep(3)
                     setFormDisplay(false)
                     return
@@ -67,7 +69,7 @@ const Content = () => {
         }
 
         setStep(1)
-        setGenerating(false)
+        setGenerateStatus(null)
     }
 
     const handleChange = (value: string) => {
@@ -82,8 +84,26 @@ const Content = () => {
         setWordCount(Number(e.target.value))
     }
 
-    const handleExport = () => {
-        console.log('exportiung')
+    const handleExport = async () => {
+        setExporting('Exporting to pdf...')
+        const res = await fetch('/api/export-pdf', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ html: generatedContent }),
+        });
+    
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+    
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'export.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setExporting(null)
     }
 
     const createAssessment = () => {
@@ -133,9 +153,12 @@ const Content = () => {
                                     background: 'white',
                                     padding: '30px',
                                     position: 'relative',
-                                    width: '100%'
+                                    width: '100%',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '20px'
                                 }}>
-                                    <div style={{
+                                    <div className="input-type" style={{
                                         display: 'flex',
                                         gap: '20px',
                                         alignItems: 'center',
@@ -144,7 +167,8 @@ const Content = () => {
                                         position: 'absolute',
                                         top: '30px',
                                         left: '30px',
-                                        transform: 'translate(10%, -45%)'
+                                        transform: 'translate(10%, -45%)',
+                            
                                     }}>
 
                                         <input
@@ -166,9 +190,10 @@ const Content = () => {
                                     </div>
 
                                     <textarea
+
                                         style={{
                                             width: '100%',
-                                            height: '20vh',
+                                            height: '25vh',
                                             padding: '15px',
                                             resize: 'none',
                                         }}
@@ -212,11 +237,11 @@ const Content = () => {
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: '3rem', paddingTop: '2rem' }}>
                             <button
-                                className={`contentBtn${generating ? ' generating' : ''}`}
+                                className={`contentBtn${generateStatus!=null ? ' generating' : ''}`}
                                 onClick={handleGenerate}
-                                disabled={generating}
+                                disabled={generateStatus!=null}
                             >
-                                {generating ? 'Generating Content....' : 'Generate'}
+                                {generateStatus!=null ? 'Generating...' : 'Generate'}
                             </button>
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: '4rem' }}>
@@ -229,17 +254,12 @@ const Content = () => {
                         <QuillEditor
                             value={generatedContent}
                             onChange={handleChange}
-                            style={{ height: '800px' }}
+                            style={{ height: '800px' , maxWidth: '95vw'}}
                         />
 
                     </div>
 
-                    {step >= 3 && <div style={{
-                        display: 'flex',
-                        justifyContent: 'flex-end',
-                        gap: '3rem',
-                        marginTop: '4rem',
-                    }}>
+                    {step >= 3 && <div className="contentBtns" style={{marginBottom: '2rem'}}>
                         <button
                             className='contentBtn'
                             onClick={createAssessment}>
@@ -247,17 +267,41 @@ const Content = () => {
                         </button>
 
                         <button
-                            className='contentBtn'>
-                            Save & Review
+                            className={`contentBtn${exporting!=null ? ' generating' : ''}`}
+                            onClick={handleExport}
+                            disabled={exporting!=null}
+                        >
+                            {exporting!=null ? 'Generating...' : 'Export as PDF'}
                         </button>
 
-                        <button
-                            className='contentBtn'
-                            onClick={handleExport}
-                        >
-                            Export as PDF
-                        </button>
+
                     </div>}
+
+
+                    { (generateStatus!=null || exporting!=null) && <div style={{ 
+                        position: 'fixed',
+                        background: 'rgba(0,0,0,0.5)',
+                        zIndex: '10',
+                        top: '0',
+                        bottom: '0',
+                        right: '0',
+                        left: '0',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        gap: '10%',
+                    }}>
+
+                        <div className="loader">
+                            <div className="loader-wheel"></div>
+                            <div className="loader-text">
+                                { generateStatus || exporting }</div>
+                        </div>
+ 
+                    </div>}
+
+
                 </div>
             </div>
 
