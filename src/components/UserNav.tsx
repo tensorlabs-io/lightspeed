@@ -3,10 +3,16 @@ import HomeIcon from '@mui/icons-material/Home';
 import SettingsIcon from '@mui/icons-material/Settings';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import PersonIcon from '@mui/icons-material/Person';
+import { useRouter } from 'next/router'
 
 export default function UserNav() {
 
-
+  const router = useRouter()
+  
+  const logoutHandler = () => {
+    localStorage.removeItem('authToken')
+    router.push('/');
+  }
   return (
     <div 
       data-collapse="small" data-animation="default" data-duration="400" 
@@ -28,11 +34,11 @@ export default function UserNav() {
             <a href="#" className="w-nav-link userNavItem">
                 <span>Settings</span> <SettingsIcon />
             </a>
-            <a href="#" className="w-nav-link userNavItem">
+            <a href="/content" className="w-nav-link userNavItem">
                 <span>Create</span> <NoteAddIcon />
             </a>
-            <a href="#" className="w-nav-link userNavItem">
-                <span>Account</span> <PersonIcon />
+            <a href="#" onClick={logoutHandler} className="w-nav-link userNavItem">
+                <span>Logout</span> <PersonIcon />
             </a>
           </div>
         </nav>
