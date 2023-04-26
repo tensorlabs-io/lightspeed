@@ -218,23 +218,28 @@ const Assessment = () => {
 
     const handleExport = async () => {
         setExporting('Exporting to pdf...')
-        const res = await fetch('/api/export-pdf', {
-            method: 'POST',
-            headers: {
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ html: generatedContent }),
-        });
-    
-        const blob = await res.blob();
-        const url = URL.createObjectURL(blob);
-    
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'export.pdf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        try {
+            const res = await fetch('/api/export-pdf', {
+                method: 'POST',
+                headers: {
+                'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ html: generatedContent }),
+            });
+        
+            const blob = await res.blob();
+            const url = URL.createObjectURL(blob);
+        
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'export.pdf';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (e: any) {
+            console.log(e)
+            setError('Unexpected error occured')
+        }
         setExporting(null)
     }
 
