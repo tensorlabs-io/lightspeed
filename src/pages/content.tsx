@@ -259,7 +259,7 @@ const Content = () => {
 
                     </div>
 
-                    {step >= 3 && <div className="contentBtns" style={{marginBottom: '2rem'}}>
+                    {step >= 3 || true && <div className="contentBtns" style={{marginBottom: '2rem'}}>
                         <button
                             className='contentBtn'
                             onClick={createAssessment}>
