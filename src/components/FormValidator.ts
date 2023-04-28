@@ -61,6 +61,35 @@ const LoginValidator = (
     return null
 }
 
+
+const FeedbackValidator = (
+    title: string | undefined,
+    message: string | undefined,
+    name: string | undefined,
+    fromEmail: string | undefined,
+): (string | null) => {
+
+    if (!title || !title.length) {
+        return 'Title is required'
+    }
+
+    if (!name || !name.length) {
+        return 'Name is required'
+    }
+    if (!fromEmail || !fromEmail.length) {
+        return 'Email is required'
+    }
+    if (!message || !message.length) {
+        return 'Message is required'
+    }
+
+    if(!isValidEmail(fromEmail)){
+        return 'Email is not valid'
+    }
+
+    return null
+}
+
 const ContentGenerationValidator = (
     content: string,
     contentType: string,
@@ -127,4 +156,4 @@ const AssessmentGenerationValidator = (
     return null
 }
 
-export { SignupValidator, LoginValidator, ContentGenerationValidator, AssessmentGenerationValidator }
+export { SignupValidator, LoginValidator, ContentGenerationValidator, AssessmentGenerationValidator, FeedbackValidator }

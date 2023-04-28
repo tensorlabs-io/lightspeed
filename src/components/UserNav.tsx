@@ -1,8 +1,8 @@
 import React from 'react'
 import HomeIcon from '@mui/icons-material/Home';
-import SettingsIcon from '@mui/icons-material/Settings';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import PersonIcon from '@mui/icons-material/Person';
+import FeedbackIcon from '@mui/icons-material/Feedback';
 import { useRouter } from 'next/router'
 
 export default function UserNav() {
@@ -31,8 +31,8 @@ export default function UserNav() {
             <a href="/home" className="w-nav-link userNavItem">
                 <span>Home</span> <HomeIcon />
             </a>
-            <a href="#" className="w-nav-link userNavItem">
-                <span>Settings</span> <SettingsIcon />
+            <a href="/feedback" className="w-nav-link userNavItem">
+                <span>Feedback</span> <FeedbackIcon />
             </a>
             <a href="/content" className="w-nav-link userNavItem">
                 <span>Create</span> <NoteAddIcon />
