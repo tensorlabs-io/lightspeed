@@ -28,6 +28,7 @@ export default function SignUp() {
                 if(resp.success == 'true' && resp?.data?.auth_token){
                     localStorage.setItem('authToken', resp.data.auth_token)
                     localStorage.setItem('name', resp.data.name)
+                    localStorage.setItem('email', email || '')
                     router.push('/home')
                 }else{
                     setError(resp?.message || 'Unexpected error occured. Please try again')

@@ -5,8 +5,9 @@ import FeedbackIcon from '@mui/icons-material/Feedback'
 import React, { useState } from 'react'
 import { RestApi } from '../components/RestApi'
 import { FeedbackValidator } from '../components/FormValidator'
+import Feedback from '@/components/Feedback'
 
-const Feedback = () => {
+const test = () => {
 
     const [loading, setLoading] = useState<boolean>(false)
     const [title, setTitle] = useState<string>()
@@ -114,11 +115,11 @@ const Feedback = () => {
                 </div>
             </div>
 
-
+            <Feedback />
             <Script src="template.js" type="text/javascript"></Script>
 
         </>
     )
 }
 
-export default Feedback
+export default test

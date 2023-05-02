@@ -38,7 +38,7 @@ export default function UserNav() {
                 <span>Create</span> <NoteAddIcon />
             </a>
             <a href="#" onClick={logoutHandler} className="w-nav-link userNavItem">
-                <span>Logout</span> <PersonIcon />
+                <span>Account</span> <PersonIcon />
             </a>
           </div>
         </nav>
