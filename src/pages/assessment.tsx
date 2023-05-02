@@ -450,7 +450,7 @@ const Assessment = () => {
                             </button>
                         </div>}
                     </>}
-                    {step==1 && <>
+                    {step==2 && <>
                         <div className='contentBtns' style={{ marginBottom: '2rem' }}>
                             <FileOpenIcon style={{ fontSize: '3rem', cursor: 'pointer' }} onClick={handleExport} />
                             <ReactToPrint
