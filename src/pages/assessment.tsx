@@ -102,7 +102,7 @@ const Assessment = () => {
                         .replace('True or False', '')
                         .replace('True/False: ', '')
                     } </h2><br/>
-                <ul><li><h3>True</h3></li><li><h3>False</h3></li></ul>
+                <ul><li><h3>&nbsp;&nbsp;&nbsp;&nbsp;.True</h3></li><li><h3>&nbsp;&nbsp;&nbsp;&nbsp;.False</h3></li></ul>
                 <br/>
                 `
 
