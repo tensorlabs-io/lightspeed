@@ -11,6 +11,8 @@ import { useRouter } from 'next/router'
 import FileOpenIcon from '@mui/icons-material/FileOpen'
 import PrintIcon from '@mui/icons-material/Print'
 import ReactToPrint from 'react-to-print'
+import Feedback from '@/components/Feedback'
+import UserFooter from '@/components/UserFooter'
 
 const QuillEditor = dynamic(() => import('react-quill'), {
     ssr: false,
@@ -170,7 +172,7 @@ const Content = () => {
                             <div className="grid-container">
 
                                 <div className="grid-item" style={{ display: formDisplay > 0 ? 'block' : 'none' }}>
-                                    <select disabled style={{ width: '13vw' }}>
+                                    <select disabled style={{ width: '210px' }}>
                                         <option>1. Select Material</option>
                                     </select>
                                 </div>
@@ -244,7 +246,7 @@ const Content = () => {
                                 </div>
                                 {formDisplay <= 1 && <div className="grid-item row"></div>}
                                 <div className="grid-item" style={{ display: formDisplay > 0 ? 'block' : 'none' }}>
-                                    <select disabled style={{ width: '13vw' }}>
+                                    <select disabled style={{ width: '210px' }}>
                                         <option>2. Choose Level</option>
                                     </select>
                                 </div>
@@ -258,7 +260,7 @@ const Content = () => {
                                 </div>
                                 {formDisplay <= 1 && <div className="grid-item row"></div>}
                                 <div className="grid-item" style={{ display: formDisplay > 0 ? 'block' : 'none' }}>
-                                    <select disabled style={{ width: '13vw' }}>
+                                    <select disabled style={{ width: '210px' }}>
                                         <option>3. Word Count</option>
                                     </select>
                                 </div>
@@ -376,7 +378,8 @@ const Content = () => {
                 </div>
             </div>
 
-
+            <Feedback />
+            <UserFooter />
             <Script src="template.js" type="text/javascript"></Script>
 
         </>

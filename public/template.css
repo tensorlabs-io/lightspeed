@@ -7347,7 +7347,7 @@ blockquote {
   color: white;
   background-size: 100% 100%;
   background-position: center;
-  min-height: 90.85vh;
+  min-height: 85vh;
 }
 
 
@@ -7499,10 +7499,10 @@ input[type=number]::-webkit-inner-spin-button {
 
 .feedback-wrapper {
   position:fixed;
-  bottom:10rem;
-  right:2rem;
-  width: 7rem;
-  height:7rem;
+  bottom:6rem;
+  right:1rem;
+  width: 5rem;
+  height:5rem;
   border-radius: 50%;
   background: #90F1FF;
   display:flex;
@@ -7515,6 +7515,8 @@ input[type=number]::-webkit-inner-spin-button {
   width:55%;
   aspect-ratio: 1/1;
 }
+
+
 
 .feedback-form {
   border: 5px solid #90F1FF;
@@ -7538,8 +7540,6 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 .userFooter {
-  position:absolute;
-  bottom:0;
   display:flex;
   justify-content: space-between;
   align-items: center;
@@ -7702,4 +7702,22 @@ input[type=number]::-webkit-inner-spin-button {
   100% {
     transform: rotate(360deg);
   }
+}
+
+
+
+.reviewContent h1 {
+  font-size: 18px;
+}
+
+.reviewContent h2 {
+  font-size: 16px;
+}
+
+.reviewContent h3 {
+  font-size:14px;
+}
+
+.reviewContent p {
+  font-size: 14px;
 }

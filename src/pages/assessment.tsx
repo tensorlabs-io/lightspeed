@@ -11,6 +11,8 @@ import { useRouter } from 'next/router'
 import FileOpenIcon from '@mui/icons-material/FileOpen'
 import PrintIcon from '@mui/icons-material/Print'
 import ReactToPrint from 'react-to-print'
+import Feedback from '@/components/Feedback'
+import UserFooter from '@/components/UserFooter'
 
 const QuillEditor = dynamic(() => import('react-quill'), {
     ssr: false
@@ -67,13 +69,13 @@ const Assessment = () => {
             if (!jsonData.questions.length) {
                 return ''
             }
-            let html = `<h1>${alphabet}. Choose the best answer:</h1><br/><br/>`
+            let html = `<h1 style="font-size:18px;">${alphabet}. Choose the best answer:</h1><br/><br/>`
             jsonData.questions.map((entry: any, i: number) => {
                 const options = parseMcqOptions(entry.options)
 
                 html += `
                 
-                <h2>&nbsp;&nbsp;Q${i + 1}: ${entry.question} </h2><br/>
+                <h2 style="font-size:16px;">&nbsp;&nbsp;Q${i + 1}: ${entry.question} </h2><br/>
                 ${options}
                 <br/>
                 `
@@ -90,19 +92,19 @@ const Assessment = () => {
             if (!jsonData.questions.length) {
                 return ''
             }
-            let html = `<h1>${alphabet}. True or False?:</h1><br/><br/>`
+            let html = `<h1 style="font-size:18px;">${alphabet}. True or False?:</h1><br/><br/>`
             jsonData.questions.map((entry: any, i: number) => {
                 // const options = parseMcqOptions(entry.options)
 
                 html += `
                 
-                <h2>&nbsp;&nbsp;Q${i + 1}: ${entry.question
+                <h2 style="font-size:16px;">&nbsp;&nbsp;Q${i + 1}: ${entry.question
                         .replace('True or False: ', '')
                         .replace('True or False:', '')
                         .replace('True or False', '')
                         .replace('True/False: ', '')
                     } </h2><br/>
-                <ul><li><h3>&nbsp;&nbsp;&nbsp;&nbsp;.True</h3></li><li><h3>&nbsp;&nbsp;&nbsp;&nbsp;.False</h3></li></ul>
+                <ul><li><h3 style="font-size:16px;">&nbsp;&nbsp;&nbsp;&nbsp;.True</h3></li><li><h3 style="font-size:16px;">&nbsp;&nbsp;&nbsp;&nbsp;.False</h3></li></ul>
                 <br/>
                 `
 
@@ -118,12 +120,12 @@ const Assessment = () => {
             if (!jsonData.questions.length) {
                 return ''
             }
-            let html = `<h1>${alphabet}. Fill in the blanks:</h1><br/><br/>`
+            let html = `<h1 style="font-size:18px;">${alphabet}. Fill in the blanks:</h1><br/><br/>`
             jsonData.questions.map((entry: any, i: number) => {
 
                 html += `
                 
-                <h2>&nbsp;&nbsp;Q${i + 1}: ${entry.question.replace('%BLANK%', '____________')} </h2><br/>
+                <h2 style="font-size:16px;">&nbsp;&nbsp;Q${i + 1}: ${entry.question.replace('%BLANK%', '____________')} </h2><br/>
                 <br/>
                 `
 
@@ -134,17 +136,17 @@ const Assessment = () => {
         }
     }
 
-    const parseComprehensive = (jsonData: Record<string, any>, alphabet:string): string => {
+    const parseComprehensive = (jsonData: Record<string, any>, alphabet: string): string => {
         try {
             if (!jsonData.questions.length) {
                 return ''
             }
-            let html = `<h1>${alphabet}. Comprehensive Question Answers:</h1><br/><br/>`
+            let html = `<h1 style="font-size:18px;">${alphabet}. Comprehensive Question Answers:</h1><br/><br/>`
             jsonData.questions.map((entry: any, i: number) => {
 
                 html += `
                 
-                <h2>&nbsp;&nbsp;Q${i + 1}: ${entry.question} </h2><br/>
+                <h2 style="font-size:16px;">&nbsp;&nbsp;Q${i + 1}: ${entry.question} </h2><br/>
                 <br/><br/>
                 `
 
@@ -156,7 +158,7 @@ const Assessment = () => {
     }
 
     const handleGenerate = async () => {
-        
+
         setGenerateStatus('Generating Assessment..')
         setError(null)
         const createQuestionsArray = [createMcq, createTrueFalse, createFillInBlanks, createComprehensive]
@@ -277,7 +279,7 @@ const Assessment = () => {
                             <div className="grid-container">
 
                                 <div className="grid-item" style={{ display: formDisplay > 0 ? 'block' : 'none' }}>
-                                    <select disabled style={{ width: '13vw' }}>
+                                    <select disabled style={{ width: '210px' }}>
                                         <option>1. Select Material</option>
                                     </select>
                                 </div>
@@ -350,11 +352,11 @@ const Assessment = () => {
                                 </div>
                                 {formDisplay <= 1 && <div className="grid-item row"></div>}
                                 <div className="grid-item" style={{ display: formDisplay > 0 ? 'block' : 'none' }}>
-                                    <select disabled style={{ width: '13vw' }}>
+                                    <select disabled style={{ width: '210px' }}>
                                         <option>2. Question Types</option>
                                     </select>
                                 </div>
-                                <div className="grid-item" style={{ gap: '5px', display: formDisplay > 1 ? 'block' : 'none', flexDirection: 'column', justifyContent: 'flex-start', padding:0 }}>
+                                <div className="grid-item" style={{ gap: '5px', display: formDisplay > 1 ? 'block' : 'none', flexDirection: 'column', justifyContent: 'flex-start', padding: 0 }}>
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '10px' }}>
                                         <div style={{ display: 'flex', gap: '10px', width: '50%', background: 'white', padding: '10px 5px' }}>
                                             <input
@@ -401,7 +403,7 @@ const Assessment = () => {
                                     </div>
 
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '10px' }}>
-                                        <div style={{ display: 'flex', gap: '10px', width: '50%', background: 'white', padding: '10px 5px'}}>
+                                        <div style={{ display: 'flex', gap: '10px', width: '50%', background: 'white', padding: '10px 5px' }}>
                                             <input
                                                 type="checkbox"
                                                 checked={createComprehensive != null}
@@ -450,14 +452,14 @@ const Assessment = () => {
                             </button>
                         </div>}
                     </>}
-                    {step==2 && <>
+                    {step == 2 && <>
                         <div className='contentBtns' style={{ marginBottom: '2rem' }}>
                             <FileOpenIcon style={{ fontSize: '3rem', cursor: 'pointer' }} onClick={handleExport} />
                             <ReactToPrint
                                 trigger={() => <PrintIcon style={{ fontSize: '3rem', cursor: 'pointer' }} />}
                                 content={() => printableRef.current}
                             />
-                            
+
                         </div>
                         <div className="reviewContent" ref={printableRef} dangerouslySetInnerHTML={{ __html: generatedContent }}></div>
                         <div style={{
@@ -468,12 +470,17 @@ const Assessment = () => {
                             marginTop: '2rem',
                             gap: '1.5rem',
                         }}>
-                            <div><button
-                                className='contentBtn'
-                                style={{ padding: '0', width: '32rem', height: '4rem' }}
-                                onClick={handleExport}>
-                                Choose Paper Size & Print Out
-                            </button></div>
+                            <div>
+                                <ReactToPrint
+                                    trigger={() => <button
+                                        className='contentBtn'
+                                        style={{ padding: '0', width: '32rem', height: '4rem' }}
+                                        onClick={handleExport}>
+                                        Choose Paper Size & Print Out
+                                    </button>}
+                                    content={() => printableRef.current}
+                                />
+                            </div>
                             <div className='contentBtns'>
                                 <button
                                     className='contentBtn'
@@ -516,7 +523,8 @@ const Assessment = () => {
                 </div>
             </div>
 
-
+            <Feedback />
+            <UserFooter />
             <Script src="template.js" type="text/javascript"></Script>
 
         </>

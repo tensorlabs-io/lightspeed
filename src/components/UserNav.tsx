@@ -31,9 +31,6 @@ export default function UserNav() {
             <a href="/home" className="w-nav-link userNavItem">
                 <span>Home</span> <HomeIcon />
             </a>
-            <a href="/feedback" className="w-nav-link userNavItem">
-                <span>Feedback</span> <FeedbackIcon />
-            </a>
             <a href="/content" className="w-nav-link userNavItem">
                 <span>Create</span> <NoteAddIcon />
             </a>
