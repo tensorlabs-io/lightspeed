@@ -198,22 +198,22 @@ const Assessment = () => {
                     const alphabets = ['A', 'B', 'C', 'D']
                     let a = 0
                     if (createMcq) {
-                        html += parseMcqs(data?.multiple_choice_questions?.[0], alphabets[a])
+                        html += parseMcqs(data?.multiple_choice_questions?.[0], alphabets[a]) + '<br/>'
                         a++
                     }
 
                     if (createComprehensive) {
-                        html += parseComprehensive(data?.comprehensive_questions?.[0], alphabets[a])
+                        html += parseComprehensive(data?.comprehensive_questions?.[0], alphabets[a]) + '<br/>'
                         a++
                     }
 
                     if (createFillInBlanks) {
-                        html += parseFillInBlanks(data?.fill_in_the_blanks, alphabets[a])
+                        html += parseFillInBlanks(data?.fill_in_the_blanks, alphabets[a]) + '<br />'
                         a++
                     }
 
                     if (createTrueFalse) {
-                        html += parseTrueFalse(data?.true_false?.[0], alphabets[a])
+                        html += parseTrueFalse(data?.true_false?.[0], alphabets[a]) + '<br />'
                     }
 
                     setGeneratedContent(html)
@@ -240,7 +240,7 @@ const Assessment = () => {
 
     const handleExport = async () => {
         setExporting('Exporting to pdf...')
-        const fileName = prompt('Enter assessment name : ') || 'export'
+        // const fileName = prompt('Enter assessment name : ') || 'export'
         try {
             const res = await fetch('/api/export-pdf', {
                 method: 'POST',
@@ -327,8 +327,8 @@ const Assessment = () => {
                                         <textarea
                                             style={{
                                                 width: '100%',
-                                                height: '20vh',
-                                                padding: '15px',
+                                                height: '25vh',
+                                                padding: '25px 15px',
                                                 resize: 'none',
                                             }}
                                             value={content}
@@ -419,7 +419,7 @@ const Assessment = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: '3rem', paddingTop: '2rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '2rem' }}>
                                 <button
                                     className={`contentBtn${generateStatus != null ? ' generating' : ''}`}
                                     onClick={handleGenerate}

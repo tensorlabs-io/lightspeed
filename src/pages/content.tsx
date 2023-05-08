@@ -109,7 +109,7 @@ const Content = () => {
 
     const handleExport = async () => {
         setStep(5)
-        const fileName = prompt('Enter content title : ') || 'export'
+        // const fileName = prompt('Enter content title : ') || 'export'
         setExporting('Exporting to pdf...')
         try {
             const res = await fetch('/api/export-pdf', {
@@ -280,7 +280,7 @@ const Content = () => {
                                     </div>
                                 </div>}
                             </div>
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', paddingRight: '3rem', paddingTop: '2rem' }}>
+                            <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '2rem' }}>
                                 <button
                                     className={`contentBtn${generateStatus != null ? ' generating' : ''}`}
                                     onClick={handleGenerate}
