@@ -240,6 +240,7 @@ const Assessment = () => {
 
     const handleExport = async () => {
         setExporting('Exporting to pdf...')
+        const fileName = prompt('Enter assessment name : ') || 'export'
         try {
             const res = await fetch('/api/export-pdf', {
                 method: 'POST',
@@ -274,7 +275,7 @@ const Assessment = () => {
                     <h1 style={{ color: '#539BF9', fontWeight: '700' }}>Assessment Generator</h1><br /><br />
                     {step < 2 && <>
                         <div className="formBox" style={{ paddingBottom: '2rem' }}>
-                            <img src="/images/edit.png" className="abs-icon" onClick={(e) => setFormDisplay(formDisplay + displayIncrement)} />
+                            <img src="/images/reselect.svg" className="abs-icon" onClick={(e) => setFormDisplay(formDisplay + displayIncrement)} />
 
                             <div className="grid-container">
 
@@ -345,8 +346,8 @@ const Assessment = () => {
                                             paddingTop: '6px'
 
                                         }}>
-                                            <img className="imgIcon" src="/images/copy.png" />
-                                            <img className="imgIcon" src="/images/paperClip.png" />
+                                            <img className="imgIcon" src="/images/book.svg" />
+                                            <img className="imgIcon" src="/images/paperClip.svg" />
                                         </div>
                                     </div>
                                 </div>

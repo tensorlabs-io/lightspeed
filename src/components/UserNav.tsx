@@ -2,7 +2,7 @@ import React from 'react'
 import HomeIcon from '@mui/icons-material/Home';
 import NoteAddIcon from '@mui/icons-material/NoteAdd';
 import PersonIcon from '@mui/icons-material/Person';
-import FeedbackIcon from '@mui/icons-material/Feedback';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useRouter } from 'next/router'
 
 export default function UserNav() {
@@ -20,7 +20,7 @@ export default function UserNav() {
       <div className="nav-container w-container">
         <div className="logo-div">
           <a href="/home" aria-current="page" className="nav-logo w-inline-block w--current">
-            <img src="images/logo.png" width="250" height="200" alt="Logo" className="logo" />
+            <img src="images/logo.png" alt="Logo" className="logo" />
           </a>
         </div>
         <nav role="navigation" className="nav-content w-nav-menu">
@@ -36,6 +36,9 @@ export default function UserNav() {
             </a>
             <a href="#" onClick={logoutHandler} className="w-nav-link userNavItem">
                 <span>Account</span> <PersonIcon />
+            </a>
+            <a href="#" className="w-nav-link userNavItem">
+                <span>Settings</span> <SettingsIcon />
             </a>
           </div>
         </nav>

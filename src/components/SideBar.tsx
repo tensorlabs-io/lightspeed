@@ -15,7 +15,7 @@ export default function SideBar(props: SideBarProps) {
   
   return (
     <div className="userSidebar">
-      <div style={{ width: '110px', height: '110px', borderRadius: '49%', backgroundColor: '#D9D9D9' }}></div>
+      <div style={{ width: '90px', height: '90px', borderRadius: '49%', backgroundColor: '#D9D9D9' }}></div>
       <h3 style={{ textAlign: 'center', fontSize: '1.2rem' }}>
         {name} <br />
         <small style={{ fontSize: '0.9rem', color: '#90F1FF' }}>English Grammer</small>

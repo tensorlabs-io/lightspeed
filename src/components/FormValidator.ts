@@ -109,8 +109,8 @@ const ContentGenerationValidator = (
         return 'Level should be in range 0-100'
     }
 
-    if( !(wordCount >=100 && wordCount <= 250) ) {
-        return 'Word count should be in range 100 - 250'
+    if( !(wordCount >=100 && wordCount <= 350) ) {
+        return 'Word count should be in range 100 - 350'
     }
 
     return null

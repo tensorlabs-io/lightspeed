@@ -7,10 +7,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   html = '<div style="padding:2rem;">'+html+'</div>';
 
   // Parse the HTML string and add font sizes to the tags
-  html = html.replace(/<h1([^>]*)>/g, '<h1$1 style="font-size: 18px;">');
-  html = html.replace(/<h2([^>]*)>/g, '<h2$1 style="font-size: 16px;">');
-  html = html.replace(/<h3([^>]*)>/g, '<h2$1 style="font-size: 14px;">');
-  html = html.replace(/<p([^>]*)>/g, '<p$1 style="font-size: 14px;">');
+  html = html.replace(/<h1([^>]*)>/g, '<h1$1 style="font-size: 16px;">');
+  html = html.replace(/<h2([^>]*)>/g, '<h2$1 style="font-size: 14px;">');
+  html = html.replace(/<h3([^>]*)>/g, '<h2$1 style="font-size: 12px;">');
+  html = html.replace(/<p([^>]*)>/g, '<p$1 style="font-size: 12px;">');
   
   const options: CreateOptions = {
     format: 'A4',
