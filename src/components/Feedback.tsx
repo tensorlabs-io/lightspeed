@@ -65,13 +65,14 @@ const Feedback: React.FC = () => {
         <div className="feedback-form">
           <textarea
             id="feedback-input"
-            placeholder={isSending ? 'Sending Feedback...' : 'Please give us your feedback here'}
+            placeholder={isSending ? 'Sending Feedback...' : 'Please give us your feedback here\nWe would like to hear your voice!'}
             value={feedbackText}
             onChange={handleTextAreaChange}
             onKeyPress={handleKeyPress}
             onClick={handleTextAreaClick}
             disabled={isSending}
           />
+          <div className='arrowDown'></div>
         </div>
       )}
     </div> :

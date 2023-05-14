@@ -12,6 +12,8 @@ import ReactToPrint from 'react-to-print'
 import Feedback from '@/components/Feedback'
 import UserFooter from '@/components/UserFooter'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
+import ArrowRightOutlinedIcon from '@mui/icons-material/ArrowRightOutlined'
+
 
 
 const QuillEditor = dynamic(() => import('react-quill'), {
@@ -71,10 +73,12 @@ const Content = () => {
             console.log(resp)
             if (resp && resp?.success) {
                 if (resp.success == 'true' && resp?.data?.generated_notes?.length) {
+
                     const process_notes = resp.data.generated_notes
                         .split('\n')
-                        .map((para: string) => `<p style="font-size:2rem;">${para}</p>`)
-                        .join('<br/>');
+                        .map((para: string) => `<p">${para}<br></p>`)
+                        .join('');
+
                     setGeneratedContent(process_notes)
                     setPgc(resp.data.generated_notes)
                     setGenerateStatus(null)
@@ -96,6 +100,7 @@ const Content = () => {
     }
 
     const handleChange = (value: string) => {
+        console.log('changed', value)
         setGeneratedContent(value)
     }
 
@@ -109,7 +114,6 @@ const Content = () => {
 
     const handleExport = async () => {
         setStep(5)
-        // const fileName = prompt('Enter content title : ') || 'export'
         setExporting('Exporting to pdf...')
         try {
             const res = await fetch('/api/export-pdf', {
@@ -169,7 +173,7 @@ const Content = () => {
                     </span>
                 </SideBar>
                 <div className="contentBox">
-                    <h1 style={{ color: '#539BF9', fontWeight: '700' }}>Content Creator</h1><br /><br />
+                    <h1 style={{ color: '#539BF9', fontWeight: '700' }}>{step < 4 ? 'Content Creator': 'Review'}</h1><br /><br />
                     {step <= 3 && <>
                         <div className="formBox" style={{ paddingBottom: '2rem' }}>
                             <img src="/images/reselect.svg" className="abs-icon" onClick={(e) => setFormDisplay(formDisplay + displayIncrement)} />
@@ -179,18 +183,17 @@ const Content = () => {
                                 <div className="grid-item" style={{ display: formDisplay > 0 ? 'block' : 'none' }}>
                                     <div className="formToggle" onClick={(e) => { e.preventDefault(); setShowMaterial(!showMaterial) }}>
                                         <span>1. Select Material</span>
-                                        <ArrowDropDownIcon />
+                                        {showMaterial ? <ArrowDropDownIcon />: <ArrowRightOutlinedIcon/>}
                                     </div>
                                 </div>
                                 {showMaterial && formDisplay > 1 ? <div className="grid-item row" style={{ padding: 0, display: formDisplay > 1 ? 'block' : 'none' }}>
                                     <div style={{
                                         background: 'white',
-                                        padding: '30px',
+                                        padding: '20px',
                                         position: 'relative',
                                         width: '100%',
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        gap: '20px'
                                     }}>
                                         <div className="input-type" style={{
                                             display: 'flex',
@@ -200,8 +203,8 @@ const Content = () => {
                                             padding: '0px 12px',
                                             position: 'absolute',
                                             top: '30px',
-                                            left: '30px',
-                                            transform: 'translate(10%, -55%)',
+                                            left: '40px',
+                                            transform: 'translate(10%, -55%) scale(1.2)',
 
                                         }}>
 
@@ -227,8 +230,8 @@ const Content = () => {
 
                                             style={{
                                                 width: '100%',
-                                                height: '25vh',
-                                                padding: '25px 15px',
+                                                height: '30vh',
+                                                padding: '30px 15px',
                                                 resize: 'none',
                                             }}
                                             placeholder={contentType === 'text' ? 'Copy and paste text or type passages' : 'Enter a comma after each keyword.\nex) Osaka, Ramen, Nissin'}
@@ -242,8 +245,6 @@ const Content = () => {
                                             alignItems: 'center',
                                             justifyContent: 'flex-end',
                                             gap: '10px',
-                                            paddingTop: '6px'
-
                                         }}>
                                             <img className="imgIcon" src="/images/book.svg" />
                                             <img className="imgIcon" src="/images/paperClip.svg" />
@@ -253,11 +254,11 @@ const Content = () => {
                                 <div className="grid-item" style={{ display: formDisplay > 0 ? 'block' : 'none' }}>
                                     <div className="formToggle" onClick={(e) => { e.preventDefault(); setShowLevel(!showLevel) }}>
                                         <span>2. Choose Level</span>
-                                        <ArrowDropDownIcon />
+                                        {showLevel ? <ArrowDropDownIcon />: <ArrowRightOutlinedIcon/>}
                                     </div>
                                 </div>
                                 {showLevel && formDisplay > 1 ? <div className="grid-item row" style={{ justifyContent: 'stretch', display: formDisplay > 1 ? 'flex' : 'none' }}>
-                                    <div style={{ width: '50%', textAlign: 'left' }}>
+                                    <div style={{ width: '40%', textAlign: 'left' }}>
                                         <input type="range" min="1" max="100" className="rangeSlider" value={level} onChange={handleLevelChange} />
                                     </div>
                                     <div style={{ width: '50%', textAlign: 'left', display: formDisplay > 0 ? 'block' : 'none' }}>
@@ -268,11 +269,11 @@ const Content = () => {
                                 <div className="grid-item" style={{ display: formDisplay > 0 ? 'block' : 'none' }}>
                                     <div className="formToggle" onClick={(e) => { e.preventDefault(); setShowWordCount(!showWordCount) }}>
                                         <span>3. Word Count</span>
-                                        <ArrowDropDownIcon />
+                                        {showWordCount ? <ArrowDropDownIcon />: <ArrowRightOutlinedIcon/>}
                                     </div>
                                 </div>
                                 {showWordCount && <div className="grid-item row" style={{ justifyContent: 'stretch', display: formDisplay > 1 ? 'flex' : 'none' }}>
-                                    <div style={{ width: '50%', textAlign: 'left' }}>
+                                    <div style={{ width: '40%', textAlign: 'left' }}>
                                         <input type="range" min="100" max="350" className="rangeSlider" value={wordCount} onChange={handleWordCountChange} />
                                     </div>
                                     <div style={{ width: '50%', textAlign: 'left' }}>
@@ -285,7 +286,7 @@ const Content = () => {
                                     className={`contentBtn${generateStatus != null ? ' generating' : ''}`}
                                     onClick={handleGenerate}
                                     disabled={generateStatus != null}
-                                    style={{ transform: 'scale(0.9)'}}
+                                    style={{ transform: 'translate(-10%,-10%) scale(0.8)'}}
                                 >
                                     {generateStatus != null ? 'Generating...' : 'Generate'}
                                 </button>

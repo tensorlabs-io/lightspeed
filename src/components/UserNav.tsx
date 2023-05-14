@@ -1,8 +1,8 @@
 import React from 'react'
-import HomeIcon from '@mui/icons-material/Home';
-import NoteAddIcon from '@mui/icons-material/NoteAdd';
-import PersonIcon from '@mui/icons-material/Person';
-import SettingsIcon from '@mui/icons-material/Settings';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import { useRouter } from 'next/router'
 
 export default function UserNav() {
@@ -18,8 +18,9 @@ export default function UserNav() {
       data-collapse="small" data-animation="default" data-duration="400" 
       data-easing="ease" data-easing2="ease" role="banner" className="nav-bar w-nav">
       <div className="nav-container w-container">
-        <div className="logo-div">
-          <a href="/home" aria-current="page" className="nav-logo w-inline-block w--current">
+
+        <div className='logo-container'>
+          <a href="/home" aria-current="page">
             <img src="images/logo.png" alt="Logo" className="logo" />
           </a>
         </div>
@@ -29,16 +30,16 @@ export default function UserNav() {
           </div>
           <div className="nav-cta-button-container">
             <a href="/home" className="w-nav-link userNavItem">
-                <span>Home</span> <HomeIcon />
+                <span>Home</span> <HomeOutlinedIcon />
             </a>
             <a href="/content" className="w-nav-link userNavItem">
-                <span>Create</span> <NoteAddIcon />
+                <span>Create</span> <NoteAddOutlinedIcon />
             </a>
             <a href="#" onClick={logoutHandler} className="w-nav-link userNavItem">
-                <span>Account</span> <PersonIcon />
+                <span>Account</span> <PersonOutlinedIcon />
             </a>
             <a href="#" className="w-nav-link userNavItem">
-                <span>Settings</span> <SettingsIcon />
+                <span>Settings</span> <SettingsOutlinedIcon />
             </a>
           </div>
         </nav>

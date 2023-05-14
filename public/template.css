@@ -3176,22 +3176,6 @@ blockquote {
   background-color: #001730;
 }
 
-.logo-div {
-  display: block;
-  margin-top: 4px;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-flex: 0;
-  -webkit-flex: 0 auto;
-  -ms-flex: 0 auto;
-  flex: 0 auto;
-}
 
 .nav-logo {
   -webkit-transition: opacity 200ms ease;
@@ -3253,6 +3237,7 @@ blockquote {
   opacity: 0.9;
   color: #fff;
   font-size: 24px;
+  cursor:pointer;
 }
 
 .icon.tab {
@@ -4020,8 +4005,8 @@ blockquote {
 
 .logo {
   display: block;
-  height: 70px;
-  width: 200px;
+  height: 50px;
+  width: 180px;
   margin-left:15px;
   aspect-ratio: 1/1;
 }
@@ -5651,19 +5636,6 @@ blockquote {
     color: #096ad0;
   }
 
-  .logo-div {
-    -webkit-box-flex: 0;
-    -webkit-flex: 0 auto;
-    -ms-flex: 0 auto;
-    flex: 0 auto;
-  }
-
-  .nav-logo {
-    -webkit-box-flex: 1;
-    -webkit-flex: 1;
-    -ms-flex: 1;
-    flex: 1;
-  }
 
   .footer-links-container {
     display: -webkit-box;
@@ -6087,10 +6059,6 @@ blockquote {
 
   .nav-bar {
     border: 1px none #000;
-  }
-
-  .logo-div {
-    margin-right: auto;
   }
 
   .footer-logo {
@@ -7340,7 +7308,7 @@ blockquote {
 }
 
 .userSidebar {
-  width:18%;
+  width:15vw;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7349,11 +7317,17 @@ blockquote {
   background: url(images/sidebar.png);
   background-repeat: repeat-y;
   color: white;
-  background-size: cover 100vh;
-  background-position: center;
-  min-height: 85vh;
+  background-size: 100% auto;
+  background-position: top center;
+  min-height: 86vh;
 }
 
+.logo-container {
+  width:15vw;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .contentHeading {
   display: flex;
@@ -7534,25 +7508,51 @@ input[type=number]::-webkit-inner-spin-button {
 
 
 .feedback-form textarea {
-  width: 28vw;
-  height:30vw;
+  width: 22vw;
+  height:27vw;
   padding: 20px 15px;
   box-sizing: border-box;
+  border:none;
+  outline: none;
+  resize: none;
   font-size: 1rem;
   color: black;
   font-weight: 700;;
+}
+
+.arrowDown {
+  width: 0;
+  height: 0;
+  border-left: 35px solid transparent;
+  border-right: 35px solid transparent;
+  border-bottom: 50px solid #90F1FF;
+  position:relative;
+  transform:translate(-110%, 100%) rotate(180deg);
+  left:100%;
+}
+
+.arrowDown::before {
+  content: '';
+  position: absolute;
+  border-left: 35px solid transparent;
+  border-right: 35px solid transparent;
+  border-bottom: 50px solid white;
+  transform:translate(-50%,25%);
 }
 
 .userFooter {
   display:flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2rem;
+  padding: 0 2rem;
   color:white;
   width: 100vw;
+  height: 75px;
 }
 
 .userFooter ul {
+  margin: 0;
+  padding:0;
   display: flex;
   gap: 2rem;
   list-style: none;
@@ -7583,7 +7583,8 @@ input[type=number]::-webkit-inner-spin-button {
   width:200px;
   height:50px;
   display:flex;
-  justify-content: center;
+  padding: 0 5px;
+  justify-content: space-between;
   align-items: center;
   gap: 10px;
   cursor:pointer;

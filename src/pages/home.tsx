@@ -1,7 +1,7 @@
 import Script from 'next/script'
 import Nav from '../components/UserNav'
 import SideBar from '../components/SideBar'
-import NoteAddIcon from '@mui/icons-material/NoteAdd'
+import NoteAddOutlinedIcon from '@mui/icons-material/NoteAddOutlined';
 import { withAuth } from '@/components/withAuth'
 import Feedback from '@/components/Feedback'
 import UserFooter from '@/components/UserFooter'
@@ -15,7 +15,7 @@ const Home = () =>  {
                 <div className="contentBox">
                     <div style={{ display: 'flex', gap: '2rem', alignItems: 'center'}}>
                         <h3 className="contentHeading"> Choose a type of creation </h3>
-                        <NoteAddIcon className='hide-on-mobile' style={{fontSize: '4rem', paddingBottom: '10px'}} />
+                        <NoteAddOutlinedIcon className='hide-on-mobile' style={{fontSize: '4rem', paddingBottom: '10px'}} />
                     </div>
                     <div style={{
                         width: '80%',

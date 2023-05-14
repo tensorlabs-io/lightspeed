@@ -13,6 +13,10 @@ import PrintIcon from '@mui/icons-material/Print'
 import ReactToPrint from 'react-to-print'
 import Feedback from '@/components/Feedback'
 import UserFooter from '@/components/UserFooter'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
+import ArrowRightOutlinedIcon from '@mui/icons-material/ArrowRightOutlined'
+
+
 
 const QuillEditor = dynamic(() => import('react-quill'), {
     ssr: false
@@ -23,6 +27,9 @@ const Assessment = () => {
     const router = useRouter();
     const { pgc } = router.query
     const printableRef = useRef<HTMLDivElement>(null)
+
+    const [showMaterial, setShowMaterial] = useState(true)
+    const [showQuestionType, setShowQuestionType] = useState(true)
 
     const [step, setStep] = useState<number>(0)
     const [createMcq, setCreateMcq] = useState<number | null>(null)
@@ -69,15 +76,15 @@ const Assessment = () => {
             if (!jsonData.questions.length) {
                 return ''
             }
-            let html = `<h1 style="font-size:18px;">${alphabet}. Choose the best answer:</h1><br/><br/>`
+            let html = `<h1 style="font-size:18px;">${alphabet}. Choose the best answer:<br><br></h1>`
             jsonData.questions.map((entry: any, i: number) => {
                 const options = parseMcqOptions(entry.options)
 
                 html += `
                 
-                <h2 style="font-size:16px;">&nbsp;&nbsp;Q${i + 1}: ${entry.question} </h2><br/>
+                <h2 style="font-size:16px;">&nbsp;&nbsp;Q${i + 1}: ${entry.question}<br></h2>
                 ${options}
-                <br/>
+                <br>
                 `
 
             })
@@ -92,7 +99,7 @@ const Assessment = () => {
             if (!jsonData.questions.length) {
                 return ''
             }
-            let html = `<h1 style="font-size:18px;">${alphabet}. True or False?:</h1><br/><br/>`
+            let html = `<h1 style="font-size:18px;">${alphabet}. True or False?:<br><br></h1>`
             jsonData.questions.map((entry: any, i: number) => {
                 // const options = parseMcqOptions(entry.options)
 
@@ -103,8 +110,8 @@ const Assessment = () => {
                         .replace('True or False:', '')
                         .replace('True or False', '')
                         .replace('True/False: ', '')
-                    } </h2><br/>
-                <ul><li><h3 style="font-size:16px;">&nbsp;&nbsp;&nbsp;&nbsp;.True</h3></li><li><h3 style="font-size:16px;">&nbsp;&nbsp;&nbsp;&nbsp;.False</h3></li></ul>
+                    }<br/> </h2>
+                <ul><li><h3 style="font-size:16px;">&nbsp;&nbsp;&nbsp;&nbsp;. True</h3></li><li><h3 style="font-size:16px;">&nbsp;&nbsp;&nbsp;&nbsp;.False</h3></li></ul>
                 <br/>
                 `
 
@@ -120,13 +127,12 @@ const Assessment = () => {
             if (!jsonData.questions.length) {
                 return ''
             }
-            let html = `<h1 style="font-size:18px;">${alphabet}. Fill in the blanks:</h1><br/><br/>`
+            let html = `<h1 style="font-size:18px;">${alphabet}. Fill in the blanks: <br><br></h1>`
             jsonData.questions.map((entry: any, i: number) => {
 
                 html += `
                 
-                <h2 style="font-size:16px;">&nbsp;&nbsp;Q${i + 1}: ${entry.question.replace('%BLANK%', '____________')} </h2><br/>
-                <br/>
+                <h2 style="font-size:16px;">&nbsp;&nbsp;Q${i + 1}: ${entry.question.replace('%BLANK%', '____________')} <br><br></h2>
                 `
 
             })
@@ -141,13 +147,12 @@ const Assessment = () => {
             if (!jsonData.questions.length) {
                 return ''
             }
-            let html = `<h1 style="font-size:18px;">${alphabet}. Comprehensive Question Answers:</h1><br/><br/>`
+            let html = `<h1 style="font-size:18px;">${alphabet}. Comprehensive Question Answers:<br><br></h1>`
             jsonData.questions.map((entry: any, i: number) => {
 
                 html += `
                 
-                <h2 style="font-size:16px;">&nbsp;&nbsp;Q${i + 1}: ${entry.question} </h2><br/>
-                <br/><br/>
+                <h2 style="font-size:16px;">&nbsp;&nbsp;Q${i + 1}: ${entry.question} <br><br></h2>
                 `
 
             })
@@ -272,7 +277,12 @@ const Assessment = () => {
             <div className="wrapper userWrapper" >
                 <SideBar />
                 <div className="contentBox">
-                    <h1 style={{ color: '#539BF9', fontWeight: '700' }}>Assessment Generator</h1><br /><br />
+                    <h1 style={{ color: '#539BF9', fontWeight: '700' }}>
+                        {
+                            step == 0 ? 'Assessment Generator' : (step == 1 ? 'Editing Page' : 'Review Page')
+                        }
+
+                    </h1><br /><br />
                     {step < 2 && <>
                         <div className="formBox" style={{ paddingBottom: '2rem' }}>
                             <img src="/images/reselect.svg" className="abs-icon" onClick={(e) => setFormDisplay(formDisplay + displayIncrement)} />
@@ -280,19 +290,19 @@ const Assessment = () => {
                             <div className="grid-container">
 
                                 <div className="grid-item" style={{ display: formDisplay > 0 ? 'block' : 'none' }}>
-                                    <select disabled style={{ width: '210px' }}>
-                                        <option>1. Select Material</option>
-                                    </select>
+                                    <div className="formToggle" onClick={(e) => { e.preventDefault(); setShowMaterial(!showMaterial) }}>
+                                        <span>1. Select Material</span>
+                                        {showMaterial ? <ArrowDropDownIcon /> : <ArrowRightOutlinedIcon />}
+                                    </div>
                                 </div>
-                                <div className="grid-item row" style={{ padding: 0, display: formDisplay > 1 ? 'block' : 'none' }}>
+                                {showMaterial && formDisplay > 1 ? <div className="grid-item row">
                                     <div style={{
                                         background: 'white',
-                                        padding: '30px',
+                                        padding: '20px',
                                         position: 'relative',
                                         width: '100%',
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        gap: '20px'
                                     }}>
                                         <div className="input-type" style={{
                                             display: 'flex',
@@ -302,8 +312,8 @@ const Assessment = () => {
                                             padding: '0px 12px',
                                             position: 'absolute',
                                             top: '30px',
-                                            left: '30px',
-                                            transform: 'translate(10%, -45%)'
+                                            left: '40px',
+                                            transform: 'translate(10%, -55%) scale(1.2)'
                                         }}>
 
                                             <input
@@ -327,8 +337,8 @@ const Assessment = () => {
                                         <textarea
                                             style={{
                                                 width: '100%',
-                                                height: '25vh',
-                                                padding: '25px 15px',
+                                                height: '30vh',
+                                                padding: '30px 15px',
                                                 resize: 'none',
                                             }}
                                             value={content}
@@ -343,21 +353,21 @@ const Assessment = () => {
                                             alignItems: 'center',
                                             justifyContent: 'flex-end',
                                             gap: '10px',
-                                            paddingTop: '6px'
 
                                         }}>
                                             <img className="imgIcon" src="/images/book.svg" />
                                             <img className="imgIcon" src="/images/paperClip.svg" />
                                         </div>
                                     </div>
-                                </div>
-                                {formDisplay <= 1 && <div className="grid-item row"></div>}
+                                </div> : <div className="grid-item row"></div>}
+
                                 <div className="grid-item" style={{ display: formDisplay > 0 ? 'block' : 'none' }}>
-                                    <select disabled style={{ width: '210px' }}>
-                                        <option>2. Question Types</option>
-                                    </select>
+                                    <div className="formToggle" onClick={(e) => { e.preventDefault(); setShowQuestionType(!showQuestionType) }}>
+                                        <span>2. Question Types</span>
+                                        {showQuestionType ? <ArrowDropDownIcon /> : <ArrowRightOutlinedIcon />}
+                                    </div>
                                 </div>
-                                <div className="grid-item" style={{ gap: '5px', display: formDisplay > 1 ? 'block' : 'none', flexDirection: 'column', justifyContent: 'flex-start', padding: 0 }}>
+                                {showQuestionType && formDisplay > 1 && <div className="grid-item" style={{ gap: '5px', flexDirection: 'column', justifyContent: 'flex-start', padding: 0 }}>
                                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '10px' }}>
                                         <div style={{ display: 'flex', gap: '10px', width: '50%', background: 'white', padding: '10px 5px' }}>
                                             <input
@@ -417,7 +427,7 @@ const Assessment = () => {
                                             <input type="number" min="1" max="20" className="smallNumberInput" value={createComprehensive || 0} onChange={(e) => setCreateComprehensive(Number(e.target.value))} />
                                         </div>
                                     </div>
-                                </div>
+                                </div>}
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '2rem' }}>
                                 <button
@@ -455,9 +465,12 @@ const Assessment = () => {
                     </>}
                     {step == 2 && <>
                         <div className='contentBtns' style={{ marginBottom: '2rem' }}>
-                            <FileOpenIcon style={{ fontSize: '3rem', cursor: 'pointer' }} onClick={handleExport} />
+                            <img className="icon"
+                                onClick={handleExport}
+                                alt="Export" src="/images/export.svg" />
                             <ReactToPrint
-                                trigger={() => <PrintIcon style={{ fontSize: '3rem', cursor: 'pointer' }} />}
+                                trigger={() => <img src="/images/print.svg" alt="Print"
+                                    className="icon" />}
                                 content={() => printableRef.current}
                             />
 

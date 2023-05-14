@@ -11,7 +11,7 @@ export default function Footer() {
     return (
 
         <div className="userFooter" style={{ background: '#001730' }}>
-            <p>&copy; 2023 LightSpeed. All Rights Reserved. </p>
+            <p style={{ padding:0, margin:0}}>&copy; 2023 LightSpeed. All Rights Reserved. </p>
             <ul>
                 <li><a href="#top" onClick={handleTop}>Top</a></li>
                 <li><a href="/#Features">Features</a></li>
