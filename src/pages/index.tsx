@@ -9,8 +9,9 @@ import Illustration from '../components/Illustration'
 export default function Home() {
   return (
     <>
-      <Nav />
+
       <div className="wrapper">
+        <Nav />
         <Banner />
         <Illustration />
         <Cards />
@@ -18,9 +19,9 @@ export default function Home() {
         <div className="section wf-section small" >
           <div className="container w-container">
             <div className="cta-box" style={{ padding: '180px 50px', background: 'url(/images/extro.png)', backgroundSize: "100% 100%" }}>
-              <div style={{ paddingLeft: '2vw', width:'140%' }}>
+              <div style={{ paddingLeft: '2vw', width: '140%' }}>
                 <h2 className="heading h2 bold-heading">Get started with LightSpeed</h2>
-                <p className="paragraph medium" style={{paddingLeft: '3vw', maxWidth:'50vw'}}>Empower your teaching with tailored engaging content and assessments for your students.</p>
+                <p className="paragraph medium" style={{ paddingLeft: '3vw', maxWidth: '50vw' }}>Empower your teaching with tailored engaging content and assessments for your students.</p>
                 <div className="spacer _16"></div>
                 <a href="get-started" className="button white w-button">Get started now</a>
               </div>

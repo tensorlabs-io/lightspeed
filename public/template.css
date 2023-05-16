@@ -3958,8 +3958,9 @@ blockquote {
   display: -ms-flexbox;
   display: flex;
   width: 100%;
+  max-width: 1330px;
+  padding: 0 50px;
   height: 75px;
-  max-width: 100vw;
   margin-right: auto;
   margin-left: auto;
   -webkit-box-orient: horizontal;
@@ -3975,7 +3976,6 @@ blockquote {
   -webkit-align-items: center;
   -ms-flex-align: center;
   align-items: center;
-  background: #001730;
 }
 
 .error-2 {
@@ -4005,8 +4005,8 @@ blockquote {
 
 .logo {
   display: block;
-  height: 50px;
-  width: 180px;
+  height: 45px;
+  width: 140px;
   margin-left:15px;
   aspect-ratio: 1/1;
 }
@@ -4230,6 +4230,7 @@ blockquote {
   -webkit-justify-content: center;
   -ms-flex-pack: center;
   justify-content: center;
+
 }
 
 .ds-colour-block {
@@ -5467,7 +5468,7 @@ blockquote {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 0 15%;
+  padding: 0 0%;
   text-align: center;
 }
 
